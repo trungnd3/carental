@@ -10,13 +10,13 @@ export class AuthService {
   async verifyUser({ email, password }: LoginDto) {
     const user = await this.usersService.findOne({ email });
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {
-      throw new UnauthorizedException('Password invalid');
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     return user;
