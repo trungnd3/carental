@@ -8,7 +8,7 @@ import {
   generateToken,
   generateUser,
 } from '@/test/mock-data';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto } from './dtos/login.dto';
 
 describe('AuthController', () => {
   let authController: AuthController;

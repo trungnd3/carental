@@ -54,3 +54,9 @@ export async function generateUser(
     id: 1,
   };
 }
+
+export async function generateCarDto() {
+  return {
+
+  }
+}
