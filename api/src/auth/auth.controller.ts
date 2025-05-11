@@ -1,6 +1,6 @@
 import { Controller, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto } from './dtos/login.dto';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 
