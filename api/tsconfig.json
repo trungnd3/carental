@@ -18,9 +18,10 @@
     "noFallthroughCasesInSwitch": false,
     "baseUrl": ".",
     "paths": {
-      "*": ["*"],
-      "@src": ["src"],
-      "@src/*": ["src/*"]
-    }
+      "@/*": ["./src/*"]
+    },
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowJs": true
   }
 }
