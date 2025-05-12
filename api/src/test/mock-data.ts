@@ -1,7 +1,9 @@
 import { faker } from '@faker-js/faker';
 import * as bcrypt from 'bcryptjs';
-import { User } from '@prisma/client';
+import { CarModel, User } from '@prisma/client';
 import { CreateUserDto } from '@/auth/users/dtos/create-user.dto';
+import { CreateCarDto } from '@/cars/dtos/create-car.dto';
+import { CarWithModel } from '@/cars/interfaces/car-with-model.interface';
 
 const generateUSLicense = () => {
   const states = ['CA', 'NY', 'TX', 'FL', 'OH', 'WA', 'IL', 'PA', 'MI', 'GA'];
@@ -55,8 +57,62 @@ export async function generateUser(
   };
 }
 
-export async function generateCarDto() {
+export function generateCarDto(): CreateCarDto {
   return {
+    plateNumber: faker.vehicle.vrm(),
+    brand: faker.vehicle.manufacturer(),
+    model: faker.vehicle.model(),
+    stock: 3,
+    peakSeasonPrice: faker.number.float(),
+    midSeasonPrice: faker.number.float(),
+    offSeasonPrice: faker.number.float(),
+    gracePeriod: faker.number.int(),
+  };
+}
 
+export function generateCarModel(): CarModel {
+  return {
+    id: faker.number.int(),
+    brand: faker.vehicle.manufacturer(),
+    model: faker.vehicle.model(),
+    stock: 3,
+    peakSeasonPrice: faker.number.float(),
+    midSeasonPrice: faker.number.float(),
+    offSeasonPrice: faker.number.float(),
+    gracePeriod: faker.number.int(),
+  };
+}
+
+export function generateCar({
+  plateNumber: defaultPlateNumber,
+  ...modelDefaults
+}: Partial<CreateCarDto> & { modelId?: number }): CarWithModel {
+  const modelId = modelDefaults.modelId
+    ? modelDefaults.modelId
+    : faker.number.int();
+
+  const { plateNumber, ...createModel }: CreateCarDto = generateCarDto();
+
+  const carModel = {
+    id: modelId,
+    ...createModel,
+    ...modelDefaults,
+  };
+
+  const carWithModel: CarWithModel = {
+    id: faker.number.int(),
+    plateNumber,
+    modelId,
+    model: { ...carModel },
+  };
+
+  if (defaultPlateNumber) {
+    carWithModel.plateNumber = defaultPlateNumber;
   }
+
+  return carWithModel;
+}
+
+export function generateCars(num: number = 10): CarWithModel[] {
+  return Array.from(Array(num).keys()).map(() => generateCar({}));
 }

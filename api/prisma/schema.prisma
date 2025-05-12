@@ -40,6 +40,8 @@ model CarModel {
   offSeasonPrice  Float
   gracePeriod     Int
   cars            Car[]
+
+  @@unique([brand, model])
 }
 
 model BookingRecord {

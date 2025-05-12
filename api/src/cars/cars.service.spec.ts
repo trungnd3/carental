@@ -1,15 +1,34 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CarsService } from './cars.service';
+import {
+  generateCar,
+  generateCarDto,
+  generateCarModel,
+} from '@/test/mock-data';
+import { PrismaClient } from '@prisma/client';
+import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
+import { BadRequestException } from '@nestjs/common';
+import { PrismaService } from '@/prisma/prisma.service';
 
 describe('CarsService', () => {
   let carsService: CarsService;
+  let prismaMockService: DeepMockProxy<PrismaClient>;
 
   beforeEach(async () => {
+    prismaMockService = mockDeep<PrismaClient>();
+
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CarsService],
+      providers: [
+        CarsService,
+        {
+          provide: PrismaService,
+          useValue: prismaMockService,
+        },
+      ],
     }).compile();
 
     carsService = module.get<CarsService>(CarsService);
+    prismaMockService.user.findFirst.mockClear();
   });
 
   it('should be defined', () => {
@@ -21,18 +40,36 @@ describe('CarsService', () => {
     expect(cars).toEqual([]);
   });
 
-  it('should create a new car', async () => {
-    const createdCar = await carsService.create();
-    expect(createdCar).toEqual([]);
+  it('should create a new car and a new car model if car model has not existed', async () => {
+    const createCarDto = generateCarDto();
+
+    prismaMockService.car.create.mockResolvedValue(generateCar(createCarDto));
+
+    const createdCar = await carsService.create(createCarDto);
+    expect(createdCar.plateNumber).toEqual(createCarDto.plateNumber);
   });
 
-  it('should update an existing car', async () => {
-    const updatedCar = await carsService.update();
-    expect(updatedCar).toEqual([]);
+  it('should create a new car without creating a new car model if car model has existed', async () => {
+    const createCarDto = generateCarDto();
+    const carModel = generateCarModel();
+
+    prismaMockService.car.create.mockResolvedValue(
+      generateCar({ ...createCarDto, modelId: carModel.id }),
+    );
+    prismaMockService.carModel.findUnique.mockResolvedValue(carModel);
+
+    const createdCar = await carsService.create(createCarDto);
+    expect(createdCar.plateNumber).toEqual(createCarDto.plateNumber);
+    expect(createdCar.modelId).toEqual(carModel.id);
   });
 
-  it('should delete an existing car', async () => {
-    const carId = await carsService.delete();
-    expect(carId).toEqual([]);
+  it('should not create a new car if the car can be found by plateNumber', async () => {
+    const createCarDto = generateCarDto();
+    const car = generateCar({});
+
+    prismaMockService.car.findFirst.mockResolvedValue(car);
+    await expect(
+      async () => await carsService.create(createCarDto),
+    ).rejects.toThrow(new BadRequestException('Car already exists.'));
   });
 });

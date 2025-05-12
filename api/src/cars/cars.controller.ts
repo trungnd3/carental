@@ -12,5 +12,7 @@ export class CarsController {
   }
 
   @Post()
-  async createCar(@Body() createCarDto: CreateCarDto) {}
+  async createCar(@Body() createCarDto: CreateCarDto) {
+    return this.carsService.create(createCarDto);
+  }
 }
