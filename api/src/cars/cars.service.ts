@@ -10,7 +10,13 @@ import { PrismaService } from '@/prisma/prisma.service';
 export class CarsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getAll() {}
+  async getAll() {
+    return this.prismaService.car.findMany({
+      include: {
+        model: true,
+      },
+    });
+  }
 
   async create(createCarDto: CreateCarDto) {
     // Get the car by plateNumber, throw error if it exists
