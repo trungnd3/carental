@@ -72,6 +72,9 @@ export class CarsService {
       where: {
         plateNumber,
       },
+      include: {
+        model: true,
+      },
     });
   }
 }

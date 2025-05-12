@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from './prisma/prisma.module';
-import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { TokenModule } from './token.module';
+import { AuthModule } from './auth/auth.module';
 import { CarsModule } from './cars/cars.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { BookingsModule } from './bookings/bookings.module';
 
 @Module({
   imports: [
@@ -10,6 +12,8 @@ import { CarsModule } from './cars/cars.module';
     PrismaModule,
     AuthModule,
     CarsModule,
+    BookingsModule,
+    TokenModule,
   ],
 })
 export class AppModule {}
