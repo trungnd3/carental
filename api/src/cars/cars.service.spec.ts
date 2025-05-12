@@ -4,6 +4,7 @@ import {
   generateCar,
   generateCarDto,
   generateCarModel,
+  generateCars,
 } from '@/test/mock-data';
 import { PrismaClient } from '@prisma/client';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
@@ -36,8 +37,11 @@ describe('CarsService', () => {
   });
 
   it('should get all the cars', async () => {
+    const mockCars = generateCars();
+    prismaMockService.car.findMany.mockResolvedValue(mockCars);
     const cars = await carsService.getAll();
-    expect(cars).toEqual([]);
+    expect(cars.length).toEqual(mockCars.length);
+    expect(cars[0].id).toEqual(mockCars[0].id);
   });
 
   it('should create a new car and a new car model if car model has not existed', async () => {
