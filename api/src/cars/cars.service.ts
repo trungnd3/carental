@@ -18,6 +18,10 @@ export class CarsService {
     });
   }
 
+  async getAllModels() {
+    return this.prismaService.carModel.findMany();
+  }
+
   async create(createCarDto: CreateCarDto) {
     // Get the car by plateNumber, throw error if it exists
     const car = await this.getCarByPlateNumber(createCarDto.plateNumber);

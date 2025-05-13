@@ -7,12 +7,14 @@ import { UserPayload } from './interfaces/user-payload.interface';
 import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from './guards/auth.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
+import { UsersService } from './users/users.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly configService: ConfigService,
     private readonly authService: AuthService,
+    private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -37,6 +39,7 @@ export class AuthController {
     );
 
     res.cookie('Authorization', signedJwt, {
+      path: '/',
       httpOnly: true,
       secure: false,
       expires,
