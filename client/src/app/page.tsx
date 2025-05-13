@@ -1,6 +1,8 @@
+import { API_BASE_URL } from '@/api';
 import Image from 'next/image';
 import Link from 'next/link';
 
+console.log(API_BASE_URL)
 export default function Home() {
   return (
     <>
