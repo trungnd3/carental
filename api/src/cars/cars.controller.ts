@@ -13,6 +13,11 @@ export class CarsController {
     return this.carsService.getAll();
   }
 
+  @Get('/models')
+  async getAllCarModels() {
+    return this.carsService.getAllModels();
+  }
+
   @Post()
   async createCar(@Body() createCarDto: CreateCarDto) {
     return this.carsService.create(createCarDto);

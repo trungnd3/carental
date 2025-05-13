@@ -13,21 +13,25 @@ export class AuthGuard implements CanActivate {
     private readonly configService: ConfigService,
   ) {}
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<CustomRequest>();
 
-    if (!request.cookies || !request.cookies?.Authorization) {
+    let token: string = '';
+    if (request.cookies && request.cookies?.Authorization) {
+      token = request.cookies.Authorization;
+    }
+
+    if (!token && request.headers && request.headers.authorization) {
+      token = request.headers.authorization;
+    }
+
+    if (!token) {
       return false;
     }
 
-    const userPayload = this.jwtService.verify<UserPayload>(
-      request.cookies.Authorization,
-      {
-        secret: this.configService.getOrThrow('JWT_SECRET'),
-      },
-    );
+    const userPayload = this.jwtService.verify<UserPayload>(token, {
+      secret: this.configService.getOrThrow('JWT_SECRET'),
+    });
 
     request.user = userPayload;
 
