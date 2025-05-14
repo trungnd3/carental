@@ -16,7 +16,6 @@ export async function middleware(req: NextRequest) {
       token,
       new TextEncoder().encode(process.env.JWT_SECRET)
     );
-    console.log('middleware:', payload)
 
     // Attach the decoded payload to the request if needed
     req.headers.set('x-user', JSON.stringify(payload));
@@ -32,5 +31,5 @@ export async function middleware(req: NextRequest) {
 
 // Protect specific routes
 export const config = {
-  matcher: ['/history/:path*', '/api/cars/:path*'],
+  matcher: ['/history/:path*'],
 };

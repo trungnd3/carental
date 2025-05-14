@@ -4,13 +4,8 @@ import { cookies } from 'next/headers';
 
 export async function logoutUser() {
   try {
-    (await cookies()).set({
+    (await cookies()).delete({
       name: 'Authorization',
-      value: '',
-      path: '/',
-      httpOnly: true,
-      secure: false,
-      expires: new Date(0),
     });
 
     return { success: true };

@@ -13,7 +13,8 @@ import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as actions from '@/actions/login'
+import * as actions from '@/actions'
+import { toast } from 'sonner';
 
 export const loginSchema = z.object({
   email: z.string().min(3).max(50),
@@ -34,6 +35,7 @@ export function LoginForm() {
     const result = await actions.loginUser(data);
 
     if (result.success) {
+      toast('Login successfully.')
       router.push('/showroom');
     } else {
       form.setError('root', {

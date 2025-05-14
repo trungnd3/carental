@@ -10,9 +10,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { ICarModel } from '@/interfaces/car-model';
+import { ICarModel } from '@/interfaces';
 import Image from 'next/image';
-import { redirect } from 'next/navigation';
+import Link from 'next/link';
 
 type CarModelCardProps = React.ComponentProps<typeof Card> & {
   data: ICarModel;
@@ -25,14 +25,6 @@ export function CarModelCard({
   authToken,
   ...props
 }: CarModelCardProps) {
-
-  function handleClick() {
-    if (!authToken) {
-      alert('You must login to rent the car.');
-    }
-    redirect(`/bookings/${data.id}`);
-  }
-
   return (
     <Card className={cn('flex flex-col w-full h-full', className)} {...props}>
       <CardHeader>
@@ -53,8 +45,10 @@ export function CarModelCard({
       </CardContent>
       {authToken && (
         <CardFooter>
-          <Button className='w-full' onClick={handleClick}>
-            Rent
+          <Button asChild variant='default'>
+            <Link className='w-full' href={`/bookings/${data.slug}`}>
+              Rent
+            </Link>
           </Button>
         </CardFooter>
       )}

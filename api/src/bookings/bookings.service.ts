@@ -62,8 +62,8 @@ export class BookingsService {
       throw new BadRequestException('Must book the car from tommorrow.');
     }
 
-    // Throws error if the startAt date is less or equal than endedAt date
-    if (booking.startedAt.getTime() <= booking.endedAt.getTime()) {
+    // Throws error if the startAt date is greater than or equal to endedAt date
+    if (booking.startedAt.getTime() >= booking.endedAt.getTime()) {
       throw new BadRequestException('Invalid date range.');
     }
 
@@ -94,7 +94,7 @@ export class BookingsService {
         { carId: existingCar.id },
         {
           startedAt: {
-            gte: Date(),
+            gte: new Date(),
           },
         },
       ],
@@ -131,7 +131,8 @@ export class BookingsService {
     // Store booking record
     return this.prismaService.bookingRecord.create({
       data: {
-        ...booking,
+        startedAt: booking.startedAt,
+        endedAt: booking.endedAt,
         userId,
         carId: existingCar.id,
         totalPrice,
