@@ -1,7 +1,11 @@
-import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 import { UserPayload } from '../interfaces/user-payload.interface';
 import { CustomRequest } from '../interfaces/custom-request.interface';
@@ -26,15 +30,20 @@ export class AuthGuard implements CanActivate {
     }
 
     if (!token) {
-      return false;
+      throw new UnauthorizedException('No token provided');
     }
 
-    const userPayload = this.jwtService.verify<UserPayload>(token, {
-      secret: this.configService.getOrThrow('JWT_SECRET'),
-    });
+    try {
+      const userPayload = this.jwtService.verify<UserPayload>(token, {
+        secret: this.configService.getOrThrow('JWT_SECRET'),
+      });
 
-    request.user = userPayload;
+      request.user = userPayload;
 
-    return !!userPayload;
+      return !!userPayload;
+    } catch (error) {
+      console.error('JWT verification failed:', error);
+      throw new UnauthorizedException('Invalid or expired token');
+    }
   }
 }

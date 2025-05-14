@@ -4,6 +4,7 @@ import { CarModel, User } from '@prisma/client';
 import { CreateUserDto } from '@/auth/users/dtos/create-user.dto';
 import { CreateCarDto } from '@/cars/dtos/create-car.dto';
 import { CarWithModel } from '@/cars/interfaces/car-with-model.interface';
+import { slugify } from '@/utils';
 
 const generateUSLicense = () => {
   const states = ['CA', 'NY', 'TX', 'FL', 'OH', 'WA', 'IL', 'PA', 'MI', 'GA'];
@@ -54,6 +55,7 @@ export async function generateUser(
     ...createUserDto,
     password: hashedPassword,
     id: 1,
+    avatar: faker.internet.url(),
   };
 }
 
@@ -71,15 +73,20 @@ export function generateCarDto(): CreateCarDto {
 }
 
 export function generateCarModel(): CarModel {
+  const brand = faker.vehicle.manufacturer();
+  const model = faker.vehicle.model();
+  const slug = slugify(`${brand} ${model}`);
   return {
     id: faker.number.int(),
-    brand: faker.vehicle.manufacturer(),
-    model: faker.vehicle.model(),
+    brand,
+    model,
+    slug,
     stock: 3,
     peakSeasonPrice: faker.number.float(),
     midSeasonPrice: faker.number.float(),
     offSeasonPrice: faker.number.float(),
     gracePeriod: faker.number.int(),
+    images: [faker.internet.url()],
   };
 }
 
@@ -97,6 +104,8 @@ export function generateCar({
     id: modelId,
     ...createModel,
     ...modelDefaults,
+    images: [faker.internet.url()],
+    slug: slugify(`${createModel.brand} ${createModel.model}`),
   };
 
   const carWithModel: CarWithModel = {

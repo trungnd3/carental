@@ -4,7 +4,6 @@ import { CreateCarDto } from './dtos/create-car.dto';
 import { AuthGuard } from '@/auth/guards/auth.guard';
 
 @Controller('cars')
-@UseGuards(AuthGuard)
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}
 
@@ -19,6 +18,7 @@ export class CarsController {
   }
 
   @Post()
+  @UseGuards(AuthGuard)
   async createCar(@Body() createCarDto: CreateCarDto) {
     return this.carsService.create(createCarDto);
   }
