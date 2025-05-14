@@ -18,10 +18,10 @@ import { MakeCarBookingDto } from './dtos/make-car-booking.dto';
 export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
 
-  // Normal users are able to browsers all booking records of a particular car
-  @Get('/:plateNumber')
-  getBookingRecordsByCar(@Param('plateNumber') plateNumber: string) {
-    return this.bookingsService.getBookingRecordsByCar(plateNumber);
+  // Normal users are able to browse all booking records of a particular car model
+  @Get('/:modelSlug')
+  getBookingRecordsByCar(@Param('modelSlug') modelSlug: string) {
+    return this.bookingsService.getBookingRecordsByCarModel(modelSlug);
   }
 
   // Normal users are able to browsers all his/her booking records

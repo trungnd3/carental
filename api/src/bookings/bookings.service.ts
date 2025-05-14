@@ -5,7 +5,7 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { BookingRecord, Prisma } from '@prisma/client';
 import { MakeCarBookingDto } from './dtos/make-car-booking.dto';
 import { PricingService } from './pricing.service';
 import { DAY_MILLISECONDS } from './constants';
@@ -18,18 +18,25 @@ export class BookingsService {
     private readonly pricingService: PricingService,
   ) {}
 
-  async getBookingRecordsByCar(plateNumber: string) {
-    // Get the car with this plateNumber
-    // throw error if no existingCar found
-    const existingCar = await this.carsService.getCarByPlateNumber(plateNumber);
-
-    if (!existingCar) {
-      throw new BadRequestException('Car does not exist.');
+  async getBookingRecordsByCarModel(modelSlug: string) {
+    // Get the cars of this model
+    // throw error if cars array is empty
+    const cars = await this.carsService.getCarsByModelSlug(modelSlug);
+    if (!cars || !cars.length) {
+      throw new BadRequestException('This car model is out of stock.');
     }
 
-    return this.getBookingRecords({
-      carId: existingCar.id,
-    });
+    let bookingRecords: BookingRecord[] = [];
+
+    for (const car of cars) {
+      const bookings = await this.getBookingRecords({
+        carId: car.id,
+      });
+
+      bookingRecords = [...bookingRecords, ...bookings];
+    }
+
+    return bookingRecords;
   }
 
   async getOwnBookingRecords(userId: number) {

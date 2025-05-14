@@ -39,6 +39,7 @@ services:
     volumes:
       - ./client:/app:delegated
       - client_node_modules:/app/node_modules
+      - client_assets:/app/public
     environment:
       - WDS_SOCKET_PORT=0
       - API_BASE_URL=http://api:5000
@@ -47,3 +48,4 @@ volumes:
   db_pgdata:
   api_node_modules:
   client_node_modules:
+  client_assets:

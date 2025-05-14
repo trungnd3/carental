@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { CreateCarDto } from './dtos/create-car.dto';
 import { PrismaService } from '@/prisma/prisma.service';
+import { slugify } from '@/utils';
 
 @Injectable()
 export class CarsService {
@@ -22,6 +23,17 @@ export class CarsService {
     return this.prismaService.carModel.findMany();
   }
 
+  async getModelById(id: number) {
+    try {
+      return this.prismaService.carModel.findUnique({
+        where: { id },
+      });
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('Unexpected error');
+    }
+  }
+
   async create(createCarDto: CreateCarDto) {
     // Get the car by plateNumber, throw error if it exists
     const car = await this.getCarByPlateNumber(createCarDto.plateNumber);
@@ -30,23 +42,24 @@ export class CarsService {
     }
 
     try {
-      // Get the car model and brand name, create a new if that model doesn't exist
+      // Get the car model by its slug, which is generated automatically
+      // when a model is created
+      // Create a new model if not found
       // Create new car with the modelId from previous step
       // Both of these steps could be done using the connectOrCreate offered by prisma
+      const slug = slugify(`${createCarDto.brand} ${createCarDto.model}`);
       const createdCar = await this.prismaService.car.create({
         data: {
           plateNumber: createCarDto.plateNumber,
           model: {
             connectOrCreate: {
               where: {
-                brand_model: {
-                  brand: createCarDto.brand,
-                  model: createCarDto.model,
-                },
+                slug,
               },
               create: {
                 brand: createCarDto.brand,
                 model: createCarDto.model,
+                slug,
                 stock: createCarDto.stock,
                 peakSeasonPrice: createCarDto.peakSeasonPrice,
                 midSeasonPrice: createCarDto.midSeasonPrice,
@@ -78,6 +91,29 @@ export class CarsService {
       },
       include: {
         model: true,
+      },
+    });
+  }
+
+  getCarModelBySlug(slug: string) {
+    return this.prismaService.carModel.findFirst({
+      where: {
+        slug,
+      },
+    });
+  }
+
+  async getCarsByModelSlug(slug: string) {
+    const carModel = await this.prismaService.carModel.findUnique({
+      where: { slug },
+    });
+    if (!carModel) {
+      throw new BadRequestException('Model does not exist.');
+    }
+
+    return this.prismaService.car.findMany({
+      where: {
+        modelId: carModel.id,
       },
     });
   }
