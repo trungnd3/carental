@@ -16,6 +16,7 @@ export async function middleware(req: NextRequest) {
       token,
       new TextEncoder().encode(process.env.JWT_SECRET)
     );
+    console.log('middleware:', payload)
 
     // Attach the decoded payload to the request if needed
     req.headers.set('x-user', JSON.stringify(payload));

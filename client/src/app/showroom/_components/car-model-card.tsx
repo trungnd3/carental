@@ -13,18 +13,18 @@ import {
 import { ICarModel } from '@/interfaces/car-model';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
 
 type CarModelCardProps = React.ComponentProps<typeof Card> & {
   data: ICarModel;
+  authToken: string | undefined;
 };
 
-export async function CarModelCard({
+export function CarModelCard({
   className,
   data,
+  authToken,
   ...props
 }: CarModelCardProps) {
-  const authToken = (await cookies()).get('Authorization')?.value;
 
   function handleClick() {
     if (!authToken) {

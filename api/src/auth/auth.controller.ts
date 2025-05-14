@@ -48,7 +48,7 @@ export class AuthController {
 
   @Get('/current-user')
   @UseGuards(AuthGuard)
-  getCurrentUser(@CurrentUser() user: UserPayload) {
-    return user;
+  getCurrentUser(@CurrentUser() userPayload: UserPayload) {
+    return this.usersService.findOne({ email: userPayload.email });
   }
 }

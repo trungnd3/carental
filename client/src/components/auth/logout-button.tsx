@@ -9,6 +9,7 @@ export default function LogoutButton() {
 
   const handleLogout = async () => {
     const result = await actions.logoutUser();
+    console.log(result)
 
     if (result.success) {
       router.push('/'); // Redirect to login page

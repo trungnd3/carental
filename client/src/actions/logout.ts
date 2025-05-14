@@ -1,8 +1,6 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 export async function logoutUser() {
   try {
@@ -15,8 +13,6 @@ export async function logoutUser() {
       expires: new Date(0),
     });
 
-    revalidatePath('/');
-    redirect('/');
     return { success: true };
   } catch (error) {
     console.error(error);
