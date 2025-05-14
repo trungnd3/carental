@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { CarsService } from './cars.service';
 import { CreateCarDto } from './dtos/create-car.dto';
 import { AuthGuard } from '@/auth/guards/auth.guard';
@@ -12,7 +12,13 @@ export class CarsController {
     return this.carsService.getAll();
   }
 
-  @Get('/models')
+  @Get('/:modelSlug')
+  @UseGuards(AuthGuard)
+  async getCarModelBySlug(@Param('modelSlug') modelSlug: string) {
+    return this.carsService.getCarModelBySlug(modelSlug);
+  }
+
+  @Get('/models/all')
   async getAllCarModels() {
     return this.carsService.getAllModels();
   }

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
+import { Toaster } from '@/components/ui/sonner';
 import Footer from '@/components/layout/footer';
 import Header from '@/components/layout/header';
 
@@ -29,12 +30,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex justify-center`}
       >
-        <div className='flex flex-col min-h-screen md:max-w-[1280px] w-full mx-auto gap-8 font-[family-name:var(--font-geist-sans)]'>
+        <div className='flex flex-col min-h-screen md:max-w-[1280px] w-full mx-auto font-[family-name:var(--font-geist-sans)]'>
           <Header />
-          <main className='flex flex-col gap-8 row-start-2 items-center sm:items-start flex-1 justify-center px-8'>
+          <main className='flex flex-col gap-8 row-start-2 items-center sm:items-start flex-1 justify-center px-8 h-full'>
             {children}
           </main>
           <Footer />
+          <Toaster />
         </div>
       </body>
     </html>

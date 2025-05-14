@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import LogoutButton from '@/components/auth/logout-button';
 import AuthDialog from '@/components/auth/dialog';
-import { getCurrentUser } from '@/queries/current-user';
+import { getCurrentUser } from '@/queries';
 
 export default async function Auth() {
   let authToken = (await cookies()).get('Authorization')?.value;
@@ -40,7 +40,7 @@ export default async function Auth() {
                       : 'https://github.com/shadcn.png'
                   }
                 />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarFallback>TN</AvatarFallback>
               </Avatar>
             </MenubarTrigger>
             <MenubarContent>

@@ -25,7 +25,7 @@ export class BookingsController {
   }
 
   // Normal users are able to browsers all his/her booking records
-  @Get()
+  @Get('/records/own')
   getOwnBookingRecords(@CurrentUser() user: UserPayload) {
     return this.bookingsService.getOwnBookingRecords(user.userId);
   }

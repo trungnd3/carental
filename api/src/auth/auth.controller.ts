@@ -37,6 +37,7 @@ export class AuthController {
       expires.getSeconds() +
         parseInt(this.configService.getOrThrow('JWT_EXPIRATION')),
     );
+    console.log(signedJwt);
 
     res.cookie('Authorization', signedJwt, {
       path: '/',

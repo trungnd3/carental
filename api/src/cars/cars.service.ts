@@ -6,6 +6,7 @@ import {
 import { CreateCarDto } from './dtos/create-car.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 import { slugify } from '@/utils';
+import { CarModel } from '@prisma/client';
 
 @Injectable()
 export class CarsService {
@@ -95,12 +96,29 @@ export class CarsService {
     });
   }
 
-  getCarModelBySlug(slug: string) {
-    return this.prismaService.carModel.findFirst({
+  async getCarModelBySlug(
+    slug: string,
+  ): Promise<CarModel & { cars: string[] }> {
+    const carModel = await this.prismaService.carModel.findUnique({
       where: {
         slug,
       },
     });
+
+    if (!carModel) {
+      throw new BadRequestException('Mode not found.');
+    }
+
+    const cars = await this.prismaService.car.findMany({
+      where: {
+        modelId: carModel?.id,
+      },
+    });
+
+    return {
+      ...carModel,
+      cars: cars.map((c) => c.plateNumber),
+    };
   }
 
   async getCarsByModelSlug(slug: string) {

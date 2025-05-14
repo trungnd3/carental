@@ -1,4 +1,4 @@
-import { getCarModels } from '@/queries/car-models';
+import { getCarModels } from '@/queries';
 import { CarModelCard } from './_components/car-model-card';
 import { cookies } from 'next/headers';
 
