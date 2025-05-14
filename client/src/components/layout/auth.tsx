@@ -10,9 +10,15 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import LogoutButton from '@/components/auth/logout-button';
 import AuthDialog from '@/components/auth/dialog';
+import { getCurrentUser } from '@/queries/current-user';
 
 export default async function Auth() {
-  const authToken = (await cookies()).get('Authorization')?.value;
+  let authToken = (await cookies()).get('Authorization')?.value;
+  const currentUser = await getCurrentUser();
+
+  if (currentUser.error?.code === 401) {
+    authToken = undefined
+  }
 
   return (
     <>
@@ -27,7 +33,13 @@ export default async function Auth() {
           <MenubarMenu>
             <MenubarTrigger>
               <Avatar className='cursor-pointer'>
-                <AvatarImage src='https://github.com/shadcn.png' />
+                <AvatarImage
+                  src={
+                    currentUser?.data?.avatar
+                      ? currentUser?.data?.avatar
+                      : 'https://github.com/shadcn.png'
+                  }
+                />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </MenubarTrigger>
