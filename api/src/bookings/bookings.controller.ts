@@ -39,6 +39,11 @@ export class BookingsController {
     return this.bookingsService.makeCarBooking(makeCarBookingDto, user.userId);
   }
 
+  @Post('/calculate-price')
+  calculatePrice(@Body() makeCarBookingDto: MakeCarBookingDto) {
+    return this.bookingsService.totalPrice(makeCarBookingDto);
+  }
+
   // Normal users are able to cancel a book of his/her own
   @Patch()
   cancelCarBooking() {}

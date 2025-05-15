@@ -11,13 +11,15 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import LogoutButton from '@/components/auth/logout-button';
 import AuthDialog from '@/components/auth/dialog';
 import { getCurrentUser } from '@/queries';
+import { Button } from '../ui/button';
+import Link from 'next/link';
 
 export default async function Auth() {
   let authToken = (await cookies()).get('Authorization')?.value;
   const currentUser = await getCurrentUser();
 
   if (currentUser.error?.code === 401) {
-    authToken = undefined
+    authToken = undefined;
   }
 
   return (
@@ -25,7 +27,9 @@ export default async function Auth() {
       {!authToken && (
         <div className='flex gap-4'>
           <AuthDialog type='login' />
-          <AuthDialog type='register' />
+          <Button className='/register' asChild variant='secondary'>
+            <Link href='/register'>Register</Link>
+          </Button>
         </div>
       )}
       {authToken && (
@@ -44,7 +48,9 @@ export default async function Auth() {
               </Avatar>
             </MenubarTrigger>
             <MenubarContent>
-              <MenubarItem>Settings</MenubarItem>
+              <div className='p-2'>
+                <span>{currentUser?.data?.email}</span>
+              </div>
 
               <MenubarSeparator />
 

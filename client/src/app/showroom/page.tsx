@@ -17,7 +17,7 @@ export default async function ShowroomPage() {
   return (
     <>
       <div className='w-full flex justify-center'>
-        <h1 className='font-bold text-2xl'>Rent the car you prefer</h1>
+        <h1 className='font-bold text-2xl p-4'>Rent the car you prefer</h1>
       </div>
 
       <div className='w-full flex justify-center'>

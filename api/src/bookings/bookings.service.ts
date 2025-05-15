@@ -122,11 +122,11 @@ export class BookingsService {
       }
     }
 
-    const totalPrice = this.pricingService.calculateTotalPrice(
-      existingCar.model,
-      booking.startedAt,
-      booking.endedAt,
-    );
+    const totalPrice = await this.totalPrice({
+      plateNumber: existingCar.plateNumber,
+      startedAt: booking.startedAt,
+      endedAt: booking.endedAt,
+    });
 
     // Store booking record
     return this.prismaService.bookingRecord.create({
@@ -138,6 +138,19 @@ export class BookingsService {
         totalPrice,
       },
     });
+  }
+
+  async totalPrice({ plateNumber, startedAt, endedAt }: MakeCarBookingDto) {
+    const existingCar = await this.carsService.getCarByPlateNumber(plateNumber);
+    if (!existingCar) {
+      throw new BadRequestException('Car does not exist.');
+    }
+
+    return this.pricingService.calculateTotalPrice(
+      existingCar.model,
+      startedAt,
+      endedAt,
+    );
   }
 
   async cancelCarBooking() {}
