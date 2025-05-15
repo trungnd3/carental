@@ -19,57 +19,57 @@ A full-stack car rental management system designed to streamline the process of 
 
 ```
 .
-├── api                                                         # The backend API
-│   ├── Dockerfile                                              # Dockerfile to build the image out of the source code
-│   ├── prisma                                                  # Prisma folder
-│   │   ├── migrations                                          # Prisma migrations folder, containing all migration scripts
-│   │   ├── schema.prisma                                       # Define all Models neccessary for the API
-│   │   └── seed.ts                                             # Seeding some initial data for testing more easily
+├── api                                       # The backend API
+│   ├── Dockerfile                            # Dockerfile to build the image out of the source code
+│   ├── prisma                                # Prisma folder
+│   │   ├── migrations                        # Prisma migrations folder, containing all migration scripts
+│   │   ├── schema.prisma                     # Define all Models neccessary for the API
+│   │   └── seed.ts                           # Seeding some initial data for testing more easily
 │   ├── src
-│   │   ├── app.module.ts                                       # Main model of the API
-│   │   ├── auth                                                # Auth service: manages users and login flows
-│   │   │   ├── auth.controller.ts                              # Define all routes regarding auth
-│   │   │   ├── auth.module.ts                                  # Auth module to centralize auth services and controlers
-│   │   │   ├── auth.service.ts                                 # Define actual logic that will interact with the Prisma repositories
-│   │   │   ├── decorators                                      # Custom decorator for example the current-user to get current login user more easily
+│   │   ├── app.module.ts                     # Main model of the API
+│   │   ├── auth                              # Auth service: manages users and login flows
+│   │   │   ├── auth.controller.ts            # Define all routes regarding auth
+│   │   │   ├── auth.module.ts                # Auth module to centralize auth services and controlers
+│   │   │   ├── auth.service.ts               # Define actual logic that will interact with the Prisma repositories
+│   │   │   ├── decorators                    # Custom decorator for example the current-user to get current login user more easily
 │   │   │   │   └── current-user.decorator.ts
-│   │   │   ├── dtos                                            # Data Object Transfers: Define validation rules for body of POST/PUT
-│   │   │   ├── guards                                          # Guard is to protect some controllers or methods from unauthenticated users
+│   │   │   ├── dtos                          # Data Object Transfers: Define validation rules for body of POST/PUT
+│   │   │   ├── guards                        # Guard is to protect some controllers or methods from unauthenticated users
 │   │   │   │   └── auth.guard.ts
 │   │   │   ├── interfaces
-│   │   │   └── users                                           # User related service: to CRUD user and manage the users
-│   │   ├── bookings                                            # Bookings service: to allow user make a book, calculate the price and show to client
-│   │   ├── cars                                                # Cars service: to CRUD car and its model and brand
-│   │   ├── main.ts                                             # The entrypoint of the API
-│   │   ├── prisma                                              # Prisma module: connect the prisma client to be used across the API
-│   │   ├── test                                                # Test related setup: create mock data for testing
+│   │   │   └── users                         # User related service: to CRUD user and manage the users
+│   │   ├── bookings                          # Bookings service: to allow user make a book, calculate the price and show to client
+│   │   ├── cars                              # Cars service: to CRUD car and its model and brand
+│   │   ├── main.ts                           # The entrypoint of the API
+│   │   ├── prisma                            # Prisma module: connect the prisma client to be used across the API
+│   │   ├── test                              # Test related setup: create mock data for testing
 │   │   │   └── mock-data.ts
-│   │   ├── token.module.ts                                     # JWT module setup separately to be used globally
-├── client                                                      # The frontend client
-│   ├── Dockerfile                                              # Dockerfile to build the image out of the source code
-│   ├── public                                                  # Public assets containing all the logos, icons, and also cars and users images
+│   │   ├── token.module.ts                   # JWT module setup separately to be used globally
+├── client                                    # The frontend client
+│   ├── Dockerfile                            # Dockerfile to build the image out of the source code
+│   ├── public                                # Public assets containing all the logos, icons, and also cars and users images
 │   ├── src
-│   │   ├── actions                                             # Containing server action function for form submitting events
-│   │   │   ├── booking.ts                                      # Server action for booking a car
+│   │   ├── actions                           # Containing server action function for form submitting events
+│   │   │   ├── booking.ts                    # Server action for booking a car
 │   │   │   ├── index.ts
-│   │   │   ├── login.ts                                        # Server action for logging in
-│   │   │   └── logout.ts                                       # Server action for logging out
-│   │   ├── app                                                 # Containing all file-based routing of the app
-│   │   ├── components                                          # Components for separated and shared usage
-│   │   │   ├── auth                                            # Authentication related components like login button, login form, logout button
-│   │   │   ├── layout                                          # Layout related comonents like header, footer
-│   │   │   └── ui                                              # UI components generated by shadcn ui
+│   │   │   ├── login.ts                      # Server action for logging in
+│   │   │   └── logout.ts                     # Server action for logging out
+│   │   ├── app                               # Containing all file-based routing of the app
+│   │   ├── components                        # Components for separated and shared usage
+│   │   │   ├── auth                          # Authentication related components like login button, login form, logout button
+│   │   │   ├── layout                        # Layout related comonents like header, footer
+│   │   │   └── ui                            # UI components generated by shadcn ui
 │   │   ├── constants.ts
 │   │   ├── interfaces
 │   │   ├── lib
 │   │   │   └── utils.ts
-│   │   ├── middleware.ts                                       # Protecting routes with user logged in jwt
-│   │   └── queries                                             # Containing queries to the backend API
+│   │   ├── middleware.ts                     # Protecting routes with user logged in jwt
+│   │   └── queries                           # Containing queries to the backend API
 │   └── tsconfig.json
 ├── db
-│   └── init.sql                                                # Initial script to create database when db service started up
-├── docker-compose.yaml                                         # Docker compose to orchestrate services: backend, frontend, db
-└── nginx                                                       # Nginx config to be a reverse proxy
+│   └── init.sql                              # Initial script to create database when db service started up
+├── docker-compose.yaml                       # Docker compose to orchestrate services: backend, frontend, db
+└── nginx                                     # Nginx config to be a reverse proxy
 
 ```
 
@@ -98,15 +98,21 @@ docker compose up postgres
 
 2. API service setup:
 
-  2.1. Rename env.tmpl.txt to .env
+  - Rename env.tmpl.txt to .env
 
-  2.2. Migrate data by command
+  - Deploy the migration files
 
   ```bash
-  npm run migrate:prisma
+  npm run deploy:prisma
   ```
 
-  2.3. Start watch mode:
+  - Build the app, which will also generate prisma types and run seeding data:
+
+  ```bash
+  npm run build
+  ```
+
+  - Start watch mode:
 
   ```bash
   npm run start:dev
@@ -116,9 +122,9 @@ docker compose up postgres
 
 3. Client service setup
 
-  3.1. Rename env.tmpl.txt to .env
+  - Rename env.tmpl.txt to .env
 
-  3.2. Start watch mode:
+  - Start watch mode:
 
   ```bash
   npm run dev
