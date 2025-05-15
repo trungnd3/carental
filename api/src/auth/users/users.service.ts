@@ -4,9 +4,9 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
@@ -25,7 +25,7 @@ export class UsersService {
       ],
     });
     if (existingUser) {
-      throw new BadRequestException();
+      throw new BadRequestException('User already exists.');
     }
 
     // hashing password
@@ -35,6 +35,7 @@ export class UsersService {
       const createdUser = await this.prismaService.user.create({
         data: { ...createUserDto, password: hashedPassword },
       });
+
       return {
         email: createdUser.email,
         licenseNumber: createdUser.licenseNumber,
@@ -44,7 +45,7 @@ export class UsersService {
     }
   }
 
-  async findOne(where: Prisma.UserWhereInput) {
+  findOne(where: Prisma.UserWhereInput) {
     return this.prismaService.user.findFirst({
       where,
     });

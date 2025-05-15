@@ -1,0 +1,159 @@
+# Carental
+
+A full-stack car rental management system designed to streamline the process of booking and managing car rentals. This application leverages modern web technologies to provide a seamless experience for both administrators and customers.
+
+## 💻 Table of Contents
+
+- 🗄️ [Database Diagram](#database-diagram)
+- 🗄️ [Project Structure](#project-structure)
+- ⚙️ [Installation](#installation)
+- 🚄 [Run the App](#run-the-app)
+- 🧪 [Run Unit Tests](#run-unit-tests)
+- 🧱 [Technologies Used](#technologies-used)
+
+<h2 id="database-diagram">🗄️ Database Diagram</h2>
+
+![database diagram](./snapshots/database.png)
+
+<h2 id="project-structure">🗄️ Project Structure</h2>
+
+```
+.
+├── api                                                         # The backend API
+│   ├── Dockerfile                                              # Dockerfile to build the image out of the source code
+│   ├── prisma                                                  # Prisma folder
+│   │   ├── migrations                                          # Prisma migrations folder, containing all migration scripts
+│   │   ├── schema.prisma                                       # Define all Models neccessary for the API
+│   │   └── seed.ts                                             # Seeding some initial data for testing more easily
+│   ├── src
+│   │   ├── app.module.ts                                       # Main model of the API
+│   │   ├── auth                                                # Auth service: manages users and login flows
+│   │   │   ├── auth.controller.ts                              # Define all routes regarding auth
+│   │   │   ├── auth.module.ts                                  # Auth module to centralize auth services and controlers
+│   │   │   ├── auth.service.ts                                 # Define actual logic that will interact with the Prisma repositories
+│   │   │   ├── decorators                                      # Custom decorator for example the current-user to get current login user more easily
+│   │   │   │   └── current-user.decorator.ts
+│   │   │   ├── dtos                                            # Data Object Transfers: Define validation rules for body of POST/PUT
+│   │   │   ├── guards                                          # Guard is to protect some controllers or methods from unauthenticated users
+│   │   │   │   └── auth.guard.ts
+│   │   │   ├── interfaces
+│   │   │   └── users                                           # User related service: to CRUD user and manage the users
+│   │   ├── bookings                                            # Bookings service: to allow user make a book, calculate the price and show to client
+│   │   ├── cars                                                # Cars service: to CRUD car and its model and brand
+│   │   ├── main.ts                                             # The entrypoint of the API
+│   │   ├── prisma                                              # Prisma module: connect the prisma client to be used across the API
+│   │   ├── test                                                # Test related setup: create mock data for testing
+│   │   │   └── mock-data.ts
+│   │   ├── token.module.ts                                     # JWT module setup separately to be used globally
+├── client                                                      # The frontend client
+│   ├── Dockerfile                                              # Dockerfile to build the image out of the source code
+│   ├── public                                                  # Public assets containing all the logos, icons, and also cars and users images
+│   ├── src
+│   │   ├── actions                                             # Containing server action function for form submitting events
+│   │   │   ├── booking.ts                                      # Server action for booking a car
+│   │   │   ├── index.ts
+│   │   │   ├── login.ts                                        # Server action for logging in
+│   │   │   └── logout.ts                                       # Server action for logging out
+│   │   ├── app                                                 # Containing all file-based routing of the app
+│   │   ├── components                                          # Components for separated and shared usage
+│   │   │   ├── auth                                            # Authentication related components like login button, login form, logout button
+│   │   │   ├── layout                                          # Layout related comonents like header, footer
+│   │   │   └── ui                                              # UI components generated by shadcn ui
+│   │   ├── constants.ts
+│   │   ├── interfaces
+│   │   ├── lib
+│   │   │   └── utils.ts
+│   │   ├── middleware.ts                                       # Protecting routes with user logged in jwt
+│   │   └── queries                                             # Containing queries to the backend API
+│   └── tsconfig.json
+├── db
+│   └── init.sql                                                # Initial script to create database when db service started up
+├── docker-compose.yaml                                         # Docker compose to orchestrate services: backend, frontend, db
+└── nginx                                                       # Nginx config to be a reverse proxy
+
+```
+
+<h2 id="installation">⚙️ Installation</h2>
+- Docker Desktop (Mac/Windows) / Docker Engine (Linux)
+- docker compose
+
+1. Clone the repository
+
+   ```bash
+   git clone git@github.com:trungnd3/carental.git
+   cd carental
+   ```
+
+<h2 id="run-the-app">🚄 Run the App</h2>
+
+There are 2 methods to run the app: Run directly on local machine or Run in docker containers
+
+<h3>Method 1: Run directly on local machine</h3>
+
+1. Start up the postgres container
+
+```bash
+docker compose up postgres
+```
+
+2. API service setup:
+
+  2.1. Rename env.tmpl.txt to .env
+
+  2.2. Migrate data by command
+
+  ```bash
+  npm run migrate:prisma
+  ```
+
+  2.3. Start watch mode:
+
+  ```bash
+  npm run start:dev
+  ```
+
+  If no config or env variable changed, the API will run on http://localhost:3030
+
+3. Client service setup
+
+  3.1. Rename env.tmpl.txt to .env
+
+  3.2. Start watch mode:
+
+  ```bash
+  npm run dev
+  ```
+
+  If no config or env variable changed, the Client will run on http://localhost:3000
+
+
+<h3>Method 2: Run on docker containers</h3>
+
+1. Go to the root directory, rename env.tmpl.txt to .env (You could change the variables inside to your liking)
+
+2. Run this command to start the application on development:
+
+```bash
+docker compose up
+```
+The first time running might takes long time (~ 10 mins) for docker to download images and build.
+
+Your application is now ready to be served at http://localhost:3060
+
+<h2 id="run-unit-tests">🧪 Run Unit Tests</h2>
+
+For Backend API, go to api directory:
+```bash
+npm run test
+```
+
+![test coverage](./snapshots/coverage.png)
+
+<h2 id="technologies-used">🧱 Technologies Used</h2>
+
+- **Backend**: NestJs, Typescript
+- **Frontend**: Next.js, TailwindCSS, ShadcnUI
+- **ORM**: Prisma
+- **Database**: PostgresQL
+- **Build tool**: Docker Compose
+- **Testing tool**: Jest
