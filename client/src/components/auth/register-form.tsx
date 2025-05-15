@@ -20,7 +20,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
-import { Calendar } from '../ui/calendar';
+import { CalendarWithDropdown } from '@/components/ui/calendar-with-dropdown';
 
 export const registerSchema = z.object({
   email: z.string().min(3).max(50),
@@ -50,7 +50,7 @@ export function RegisterForm() {
   });
 
   async function onSubmit(data: z.infer<typeof registerSchema>) {
-    const result = await actions.loginUser(data);
+    const result = await actions.register(data);
 
     if (result.success) {
       toast('User created successfully.');
@@ -163,11 +163,9 @@ export function RegisterForm() {
                   </FormControl>
                 </PopoverTrigger>
                 <PopoverContent className='w-auto p-0' align='start'>
-                  <Calendar
-                    mode='single'
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    initialFocus
+                  <CalendarWithDropdown
+                    value={field.value}
+                    onChange={field.onChange}
                   />
                 </PopoverContent>
               </Popover>
@@ -216,11 +214,9 @@ export function RegisterForm() {
                   </FormControl>
                 </PopoverTrigger>
                 <PopoverContent className='w-auto p-0' align='start'>
-                  <Calendar
-                    mode='single'
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    initialFocus
+                  <CalendarWithDropdown
+                    value={field.value}
+                    onChange={field.onChange}
                   />
                 </PopoverContent>
               </Popover>
