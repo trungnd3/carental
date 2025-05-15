@@ -1,18 +1,22 @@
 FROM node:22-slim AS development
 
+RUN apt-get update -y && apt-get install -y openssl
+
 WORKDIR /usr/src/app
 
-COPY package.json ./
-COPY package-lock.json ./
-COPY tsconfig.json ./
-COPY tsconfig.build.json ./
-COPY nest-cli.json ./
+COPY ./api/package.json ./
+COPY ./api/package-lock.json ./
+COPY ./api/tsconfig.json ./
+COPY ./api/tsconfig.build.json ./
+COPY ./api/nest-cli.json ./
 
 RUN npm install
 
-COPY . .
+COPY ./api .
 
-RUN apt-get update -y && apt-get install -y openssl
+ENV NODE_ENV=development
+
+COPY ./api/prisma/bin/* ./node_modules/.prisma/client/
 
 RUN npm run build
 
@@ -23,9 +27,9 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
-COPY package-lock.json ./
-COPY nest-cli.json ./
+COPY ./api/package.json ./
+COPY ./api/package-lock.json ./
+COPY ./api/nest-cli.json ./
 
 RUN npm install --omit=dev
 

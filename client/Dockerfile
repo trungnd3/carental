@@ -2,13 +2,13 @@ FROM node:22-slim AS development
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
-COPY package-lock.json ./
-COPY tsconfig.json ./
+COPY ./client/package.json ./
+COPY ./client/package-lock.json ./
+COPY ./client/tsconfig.json ./
 
-RUN npm install
+RUN npm install --force
 
-COPY . .
+COPY ./client .
 
 RUN npm run build
 
@@ -19,10 +19,10 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
-COPY package-lock.json ./
+COPY ./client/package.json ./
+COPY ./client/package-lock.json ./
 
-RUN npm install --omit=dev
+RUN npm install --force --omit=dev
 
 COPY --from=development /usr/src/app/public ./public
 COPY --from=development /usr/src/app/.next ./.next
