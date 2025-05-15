@@ -31,6 +31,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import * as actions from '@/actions';
+import { useRef, useState } from 'react';
 
 const BookingSchema = z.object({
   plateNumber: z.string(),
@@ -59,6 +60,28 @@ export default function BookingForm({
   const form = useForm<z.infer<typeof BookingSchema>>({
     resolver: zodResolver(BookingSchema),
   });
+  const [totalPrice, setTotalPrice] = useState(0);
+  const timerId = useRef<NodeJS.Timeout>(undefined);
+
+  async function calcPriceHandler(data: z.infer<typeof BookingSchema>) {
+    if (!timerId.current) {
+      timerId.current = setTimeout(async () => {
+        const result = await actions.calculateCost({
+          plateNumber: data.plateNumber,
+          startedAt: data.dateRange.from,
+          endedAt: data.dateRange.to,
+        });
+
+        if (result.success) {
+          setTotalPrice(result.data || 0);
+        } else {
+          toast('Cannot calculate the price.');
+        }
+        clearTimeout(timerId.current);
+        timerId.current = undefined;
+      }, 500);
+    }
+  }
 
   async function onSubmit(data: z.infer<typeof BookingSchema>) {
     const result = await actions.booking({
@@ -155,7 +178,10 @@ export default function BookingForm({
                       mode='range'
                       defaultMonth={field.value?.from}
                       selected={field.value}
-                      onSelect={field.onChange}
+                      onSelect={async (event) => {
+                        field.onChange(event);
+                        await calcPriceHandler(form.getValues());
+                      }}
                       numberOfMonths={2}
                       disabled={disabledRanges}
                     />
@@ -172,13 +198,21 @@ export default function BookingForm({
             </p>
           )}
 
-          <Button
-            type='submit'
-            className='cursor-pointer'
-            disabled={form.formState.isSubmitting}
-          >
-            Submit
-          </Button>
+          <div className='flex flex-col md:flex-row gap-4 justify-between'>
+            <div className='flex justify-center items-center'>
+              <span className='text-2xl font-extrabold bg-gradient-to-bl from-zinc-500 to-zinc-800 bg-clip-text text-transparent'>
+                $ {totalPrice.toFixed(2)}
+              </span>
+            </div>
+
+            <Button
+              type='submit'
+              className='cursor-pointer'
+              disabled={form.formState.isSubmitting}
+            >
+              Submit
+            </Button>
+          </div>
         </div>
       </form>
     </Form>

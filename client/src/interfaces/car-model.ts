@@ -9,5 +9,5 @@ export interface ICarModel {
   midSeasonPrice: number;
   offSeasonPrice: number;
   gracePeriod: number;
-  cars: string[]
+  cars: string[];
 }
