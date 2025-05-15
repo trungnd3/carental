@@ -1,4 +1,5 @@
-export { booking } from './booking';
-export { calculateCost } from './calculate-cost';
-export { loginUser } from './login';
-export { logoutUser } from './logout';
+export * from './booking';
+export * from './calculate-cost';
+export * from './login';
+export * from './logout';
+export * from './register';
