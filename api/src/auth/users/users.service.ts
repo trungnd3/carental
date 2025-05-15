@@ -36,10 +36,7 @@ export class UsersService {
         data: { ...createUserDto, password: hashedPassword },
       });
 
-      return {
-        email: createdUser.email,
-        licenseNumber: createdUser.licenseNumber,
-      };
+      return createdUser;
     } catch (error) {
       throw new InternalServerErrorException(error);
     }

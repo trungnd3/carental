@@ -31,8 +31,8 @@ export function CarModelCard({
         <CardTitle>{data.brand}</CardTitle>
         <CardDescription>{data.model}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className='relative px-0 flex-1 w-full h-full'>
+      <CardContent className='flex-1'>
+        <div className='relative px-0 w-full h-full'>
           <Image
             src={data.images[0]}
             alt={`${data.brand}, ${data.model}`}
