@@ -16,7 +16,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Calendar
+  Calendar,
 } from '@/components/ui';
 import { z } from 'zod';
 import { cn } from '@/lib/utils';
@@ -70,7 +70,13 @@ export default function BookingForm({
         if (result.success) {
           setTotalPrice(result.data || 0);
         } else {
-          toast('Cannot calculate the price.');
+          toast('Cannot calculate the price.', {
+            description: (
+              <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
+                <code className='text-white'>{result.message}</code>
+              </pre>
+            ),
+          });
         }
         clearTimeout(timerId.current);
         timerId.current = undefined;
@@ -85,8 +91,6 @@ export default function BookingForm({
       endedAt: data.dateRange.to,
     });
 
-    console.log(result)
-
     if (result.success) {
       toast('You submitted the following values:', {
         description: (
@@ -96,7 +100,13 @@ export default function BookingForm({
         ),
       });
     } else {
-      toast('You submission failed.');
+      toast('You submission failed.', {
+        description: (
+          <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
+            <code className='text-white'>{result.message}</code>
+          </pre>
+        ),
+      });
     }
   }
 
