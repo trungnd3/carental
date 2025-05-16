@@ -6,7 +6,7 @@ import { IUser } from '@/interfaces';
 
 export async function register(data: Omit<IUser, 'id' | 'bookingRecords'>) {
   try {
-    const response = await fetch(`${API_BASE_URL}/users`, {
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -16,7 +16,8 @@ export async function register(data: Omit<IUser, 'id' | 'bookingRecords'>) {
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || 'Invalid credentials');
+      console.log(errorData);
+      return { success: false, message: response.statusText };
     }
 
     // Extract the Authorization cookie from the Set-Cookie header
