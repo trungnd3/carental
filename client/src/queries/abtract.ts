@@ -13,6 +13,7 @@ export async function abstractQuery<T>(endpoint: string): Promise<{
   const cookieStore = await cookies();
   const authToken = cookieStore.get('Authorization')?.value;
 
+  console.log(endpoint)
   try {
     const response = await fetch(endpoint, {
       method: 'GET',

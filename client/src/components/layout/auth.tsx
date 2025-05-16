@@ -1,18 +1,20 @@
-import { cookies } from 'next/headers';
 import {
+  Button,
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
   Menubar,
   MenubarContent,
   MenubarItem,
   MenubarMenu,
   MenubarSeparator,
   MenubarTrigger,
-} from '@/components/ui/menubar';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import LogoutButton from '@/components/auth/logout-button';
-import AuthDialog from '@/components/auth/dialog';
-import { getCurrentUser } from '@/queries';
-import { Button } from '../ui/button';
+} from '@/components/ui';
 import Link from 'next/link';
+import { cookies } from 'next/headers';
+import { getCurrentUser } from '@/queries';
+import AuthDialog from '@/components/auth/dialog';
+import LogoutButton from '@/components/auth/logout-button';
 
 export default async function Auth() {
   let authToken = (await cookies()).get('Authorization')?.value;

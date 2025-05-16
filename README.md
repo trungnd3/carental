@@ -106,13 +106,13 @@ docker compose up postgres
   npm run deploy:prisma
   ```
 
-  - Build the app, which will also generate prisma types and run seeding data:
+  - Build the app, which will also generate prisma types:
 
   ```bash
   npm run build
   ```
 
-  - Start watch mode:
+  - Start watch mode, which will also run seeding data::
 
   ```bash
   npm run start:dev
@@ -134,6 +134,7 @@ docker compose up postgres
 
 
 <h3>Method 2: Run on docker containers</h3>
+TODO: THIS IS STILL IN DEVELOPMENT AND NOT READY
 
 1. Go to the root directory, rename env.tmpl.txt to .env (You could change the variables inside to your liking)
 
@@ -152,8 +153,6 @@ For Backend API, go to api directory:
 ```bash
 npm run test
 ```
-
-![test coverage](./snapshots/coverage.png)
 
 <h2 id="technologies-used">🧱 Technologies Used</h2>
 

@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -6,7 +5,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+  Button,
+} from '@/components/ui';
 import { LoginForm } from './login-form';
 
 type AuthDialogProps = {
@@ -33,9 +33,7 @@ export default function AuthDialog({ type }: AuthDialogProps) {
         </DialogHeader>
         {type === 'login' && <LoginForm />}
         {type === 'register' && (
-          <div>
-            Feature has not been implemented in FrontEnd yet.
-          </div>
+          <div>Feature has not been implemented in FrontEnd yet.</div>
         )}
       </DialogContent>
     </Dialog>

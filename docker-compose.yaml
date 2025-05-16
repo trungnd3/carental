@@ -10,8 +10,11 @@ services:
     volumes:
       - ./db:/docker-entrypoint-initdb.d
       - db_pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: carental # Set your own password here
+      POSTGRES_DB: carental
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      test: ['CMD-SHELL', 'pg_isready', '-d', 'db_prod']
       interval: 30s
       timeout: 60s
       retries: 5
@@ -25,7 +28,7 @@ services:
     networks:
       - carental-network
     ports:
-      - 3060:80
+      - 3000:80
     depends_on:
       - api
       - client
@@ -36,7 +39,9 @@ services:
       target: development
     networks:
       - carental-network
-    command: npm run start:dev
+    ports:
+      - 3001:3000
+    command: sh -c "npm run deploy:prisma && npm run generate:prisma && npm run seed:prisma && npm run start:dev"
     volumes:
       - ./api:/usr/src/app:delegated
       - api_node_modules:/usr/src/app/node_modules
@@ -55,6 +60,8 @@ services:
       target: development
     networks:
       - carental-network
+    ports:
+      - 3002:3000
     command: npm run dev
     volumes:
       - ./client:/app:delegated
@@ -64,7 +71,9 @@ services:
       - .env
     environment:
       - WDS_SOCKET_PORT=0
-      - API_BASE_URL=http://api:5000
+      - API_BASE_URL=http://nginx/api
+      - NEXT_PUBLIC_API_URL=http://nginx/api
+      - NEXT_PUBLIC_BASE_URL=http://nginx
 
 volumes:
   db_pgdata:
