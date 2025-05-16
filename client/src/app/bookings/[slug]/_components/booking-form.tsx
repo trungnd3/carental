@@ -1,37 +1,32 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-
-import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import {
+  Button,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import * as actions from '@/actions';
+  Calendar
+} from '@/components/ui';
+import { z } from 'zod';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
 import { useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { CalendarIcon } from 'lucide-react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
+import * as actions from '@/actions';
 
 const BookingSchema = z.object({
   plateNumber: z.string(),
@@ -89,6 +84,8 @@ export default function BookingForm({
       startedAt: data.dateRange.from,
       endedAt: data.dateRange.to,
     });
+
+    console.log(result)
 
     if (result.success) {
       toast('You submitted the following values:', {

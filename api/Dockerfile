@@ -16,8 +16,6 @@ COPY ./api .
 
 ENV NODE_ENV=development
 
-COPY ./api/prisma/bin/* ./node_modules/.prisma/client/
-
 RUN npm run build
 
 FROM node:22-slim AS production

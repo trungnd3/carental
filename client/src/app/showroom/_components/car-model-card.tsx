@@ -1,15 +1,15 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '@/components/ui';
 import { ICarModel } from '@/interfaces';
 import Image from 'next/image';
 import Link from 'next/link';

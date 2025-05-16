@@ -1,9 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import * as actions from '@/actions';
-import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import * as actions from '@/actions';
+import { Button } from '@/components/ui';
+import { useRouter } from 'next/navigation';
 
 export default function LogoutButton() {
   const router = useRouter();
