@@ -12,7 +12,10 @@
     "build": "npm run build:api && npm run build:client",
     "dev:api": "npm run start:dev --prefix api",
     "dev:client": "npm run dev --prefix client",
-    "dev": "npm run dev:api & npm run dev:client"
+    "dev": "npm run dev:api & npm run dev:client",
+    "lint:api": "npm run lint --prefix api",
+    "lint:client": "npm run lint --prefix client",
+    "lint": "npm run lint:api & npm run lint:client"
   },
   "keywords": [],
   "author": "",
