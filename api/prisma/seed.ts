@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcryptjs';
 import { faker } from '@faker-js/faker';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '.prisma/client';
 import { slugify } from '../src/utils';
 
 const prisma = new PrismaClient();
@@ -62,6 +62,7 @@ async function main() {
   // Reset IDs
   await prisma.$executeRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1`;
   await prisma.$executeRaw`ALTER SEQUENCE "CarModel_id_seq" RESTART WITH 1`;
+  await prisma.$executeRaw`ALTER SEQUENCE "Car_id_seq" RESTART WITH 1`;
 
   const aliceEmail = 'alice@carental.com';
   const alicePassword = await bcrypt.hash('alice@12345', 10);
@@ -120,16 +121,40 @@ async function main() {
     console.log(`Car model: ${carModel.brand} - ${carModel.model} is created`);
     console.log(carModel);
 
-    const batch: Prisma.BatchPayload = await prisma.car.createMany({
-      data: Array.from(Array(carModel.stock).keys()).map(() => ({
-        plateNumber: faker.vehicle.vrm(),
+    const carsCount = await prisma.car.count({
+      where: {
         modelId: carModel.id,
-      })),
+      },
     });
 
-    console.log(
-      `${batch.count} of cars for the model: ${carModel.brand} - ${carModel.model} are created`,
-    );
+    if (carsCount < carModel.stock) {
+      const batch: Prisma.BatchPayload = await prisma.car.createMany({
+        data: Array.from(Array(carModel.stock - carsCount).keys()).map(() => ({
+          plateNumber: faker.vehicle.vrm(),
+          modelId: carModel.id,
+        })),
+      });
+
+      console.log(
+        `${batch.count} of cars for the model: ${carModel.brand} - ${carModel.model} are created`,
+      );
+    } else if (carsCount > carModel.stock) {
+      await prisma.car.deleteMany({
+        where: {
+          modelId: carModel.id,
+        },
+      });
+      const batch: Prisma.BatchPayload = await prisma.car.createMany({
+        data: Array.from(Array(carModel.stock).keys()).map(() => ({
+          plateNumber: faker.vehicle.vrm(),
+          modelId: carModel.id,
+        })),
+      });
+
+      console.log(
+        `${batch.count} of cars for the model: ${carModel.brand} - ${carModel.model} are created`,
+      );
+    }
   }
 }
 

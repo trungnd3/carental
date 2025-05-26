@@ -1,0 +1,20 @@
+{
+  "name": "carental",
+  "version": "1.0.0",
+  "description": "A full-stack car rental management system designed to streamline the process of booking and managing car rentals. This application leverages modern web technologies to provide a seamless experience for both administrators and customers.",
+  "main": "index.js",
+  "scripts": {
+    "install:api": "npm install --prefix api",
+    "install:client": "npm install --force --prefix client",
+    "install": "npm run install:api && npm run install:client",
+    "build:api": "npm run build --prefix api",
+    "build:client": "npm run build --prefix client",
+    "build": "npm run build:api && npm run build:client",
+    "dev:api": "npm run start:dev --prefix api",
+    "dev:client": "npm run dev --prefix client",
+    "dev": "npm run dev:api & npm run dev:client"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
