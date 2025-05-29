@@ -27,7 +27,7 @@ RUN npm install --force --omit=dev
 COPY --from=development /usr/src/app/public ./public
 COPY --from=development /usr/src/app/.next ./.next
 
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY ./client/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
