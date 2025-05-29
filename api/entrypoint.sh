@@ -12,6 +12,13 @@ SECRET_JSON=$(aws secretsmanager get-secret-value \
 export JWT_SECRET=$(echo "$SECRET_JSON" | jq -r '.JWT_SECRET')
 export JWT_EXPIRATION=3600 # 1 hour
 
+# Fetch secret from Secrets Manager
+DATABASE_JSON=$(aws secretsmanager get-secret-value \
+  --region ap-southeast-1 \
+  --secret-id prod/Carental/PostgresQL \
+  --query SecretString \
+  --output text)
+
 export POSTGRES_USERNAME=$(echo "$DATABASE_JSON" | jq -r '.username')
 export POSTGRES_PASSWORD=$(echo "$DATABASE_JSON" | jq -r '.password')
 export POSTGRES_HOST=$(echo "$DATABASE_JSON" | jq -r '.host')
