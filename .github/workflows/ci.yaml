@@ -35,6 +35,7 @@ jobs:
           IMAGES=(
             "api api/Dockerfile"
             "client client/Dockerfile"
+            "nginx nginx/Dockerfile"
           )
 
           for image in "${IMAGES[@]}"; do

@@ -27,4 +27,10 @@ RUN npm install --force --omit=dev
 COPY --from=development /usr/src/app/public ./public
 COPY --from=development /usr/src/app/.next ./.next
 
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+EXPOSE 3000
+# The command to run the application in production
 CMD [ "npm", "run", "start" ]

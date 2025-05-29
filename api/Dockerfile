@@ -39,4 +39,10 @@ COPY --from=development /usr/src/app/dist ./dist
 
 RUN apt-get update -y && apt-get install -y openssl
 
-CMD [ "npm", "run", "seed:prisma", "&&", "npm", "run", "start:prod" ]
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+EXPOSE 3000
+# The command to run the application in production
+CMD ["npm", "run", "start:prod"]
