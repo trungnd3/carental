@@ -39,4 +39,4 @@ COPY --from=development /usr/src/app/dist ./dist
 
 RUN apt-get update -y && apt-get install -y openssl
 
-CMD [ "npm", "run", "seed:prisma", "&&", "node", "dist/main" ]
+CMD [ "npm", "run", "seed:prisma", "&&", "npm", "run", "start:prod" ]
