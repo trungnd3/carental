@@ -33,8 +33,9 @@ COPY ./api/nest-cli.json ./
 
 RUN npm install --omit=dev
 
-COPY --from=development /usr/src/app/dist ./dist
+COPY --from=development /usr/src/app/node_modules/.prisma/client ./node_modules/.prisma/client
 COPY --from=development /usr/src/app/prisma ./prisma
+COPY --from=development /usr/src/app/dist ./dist
 
 RUN apt-get update -y && apt-get install -y openssl
 
