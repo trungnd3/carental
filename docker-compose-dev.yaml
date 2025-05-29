@@ -22,7 +22,9 @@ services:
 
   nginx:
     restart: always
-    image: 391898470917.dkr.ecr.ap-southeast-1.amazonaws.com/carental/nginx:latest
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
     networks:
       - carental-network
     ports:
@@ -31,21 +33,40 @@ services:
       - api
       - client
   api:
-    image: 391898470917.dkr.ecr.ap-southeast-1.amazonaws.com/carental/api:latest
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile
+      target: development
     networks:
       - carental-network
     ports:
       - 3001:3000
+    command: sh -c "npm run deploy:prisma && npm run generate:prisma && npm run seed:prisma && npm run start:dev"
+    volumes:
+      - ./api:/usr/src/app:delegated
+      - api_node_modules:/usr/src/app/node_modules
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://postgres:carental@postgres:5432/carental
     depends_on:
       postgres:
         condition: service_healthy
         restart: true
   client:
-    image: 391898470917.dkr.ecr.ap-southeast-1.amazonaws.com/carental/client:latest
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+      target: development
     networks:
       - carental-network
     ports:
       - 3002:3000
+    command: npm run dev
+    volumes:
+      - ./client:/app:delegated
+      - client_node_modules:/usr/src/app/node_modules
+      - client_assets:/usr/src/app/public
     env_file:
       - .env
     environment:
@@ -56,6 +77,9 @@ services:
 
 volumes:
   db_pgdata:
+  api_node_modules:
+  client_node_modules:
+  client_assets:
 
 networks:
   carental-network:
