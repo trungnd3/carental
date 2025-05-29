@@ -34,6 +34,7 @@ services:
     image: 391898470917.dkr.ecr.ap-southeast-1.amazonaws.com/carental/api:latest
     networks:
       - carental-network
+    hostname: api
     ports:
       - 3001:3000
     depends_on:
@@ -44,6 +45,7 @@ services:
     image: 391898470917.dkr.ecr.ap-southeast-1.amazonaws.com/carental/client:latest
     networks:
       - carental-network
+    hostname: client
     ports:
       - 3002:3000
     env_file:

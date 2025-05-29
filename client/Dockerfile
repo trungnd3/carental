@@ -17,6 +17,8 @@ FROM node:22-slim AS production
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
+RUN apt-get update -y && apt-get install -y awscli jq
+
 WORKDIR /usr/src/app
 
 COPY ./client/package.json ./
