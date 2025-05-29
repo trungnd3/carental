@@ -23,6 +23,8 @@ FROM node:22-slim AS production
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
+RUN apt-get update -y && apt-get install -y openssl
+
 WORKDIR /usr/src/app
 
 COPY ./api/package.json ./
@@ -32,7 +34,8 @@ COPY ./api/nest-cli.json ./
 RUN npm install --omit=dev
 
 COPY --from=development /usr/src/app/dist ./dist
+COPY --from=development /usr/src/app/prisma ./prisma
 
 RUN apt-get update -y && apt-get install -y openssl
 
-CMD [ "node", "dist/main" ]
+CMD [ "npm", "run", "seed:prisma", "&&", "node", "dist/main" ]
