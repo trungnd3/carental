@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcryptjs';
 import { faker } from '@faker-js/faker';
 import { Prisma, PrismaClient } from '.prisma/client';
-import { slugify } from '../src/utils';
+import { slugify } from '../utils';
 
 const prisma = new PrismaClient();
 
@@ -64,6 +64,26 @@ async function main() {
   await prisma.$executeRaw`ALTER SEQUENCE "CarModel_id_seq" RESTART WITH 1`;
   await prisma.$executeRaw`ALTER SEQUENCE "Car_id_seq" RESTART WITH 1`;
 
+  const adminEmail = 'admin@carental.com';
+  const adminPassword = await bcrypt.hash('admin@12345', 10);
+  const admin = await prisma.user.upsert({
+    where: { email: adminEmail },
+    update: {},
+    create: {
+      email: adminEmail,
+      password: adminPassword,
+      firstName: 'Trung',
+      lastName: 'Nguyen',
+      phone: '(262) 237-7231',
+      dateOfBirth: new Date('1993/02/25'),
+      licenseNumber: faker.number
+        .int({ min: 100000000, max: 999999999 })
+        .toString(),
+      licenseValidTo: new Date('2050/1/8'),
+      avatar: '/users/bob.png',
+    },
+  });
+
   const aliceEmail = 'alice@carental.com';
   const alicePassword = await bcrypt.hash('alice@12345', 10);
   const alice = await prisma.user.upsert({
@@ -103,7 +123,7 @@ async function main() {
       avatar: '/users/bob.png',
     },
   });
-  console.log({ alice, bob });
+  console.log({ admin, alice, bob });
 
   for (const carModelData of CAR_MODELS_DATA) {
     const slug = slugify(`${carModelData.brand} ${carModelData.model}`);
