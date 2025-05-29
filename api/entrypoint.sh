@@ -19,9 +19,5 @@ export POSTGRES_PORT=$(echo "$DATABASE_JSON" | jq -r '.port')
 export POSTGRES_DB=$(echo "$DATABASE_JSON" | jq -r '.dbname')
 export DATABASE_URL="postgresql://$POSTGRES_USERNAME:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB"
 
-# Run the migrations and seed the database
-npm run deploy:prisma
-npm run seed:prisma
-
 # Run the application
 exec "$@"
