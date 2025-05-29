@@ -1,0 +1,28 @@
+global:
+  imagePullPolicy: Always
+
+postgresql:
+  namespaceOverride: postgresql
+  auth:
+    username: postgres
+    password: postgres
+  primary:
+    initdb:
+      scripts:
+        create-dbs.sql: |
+          CREATE DATABASE carental;
+
+api:
+  enabled: true
+  replicas: 1
+  image: 391898470917.dkr.ecr.ap-southeast-1.amazonaws.com/carental/api:latest
+  port: 3001
+  jwt:
+    secret: d68bb2df4581b826e8e99c1c04029d893f07ea9e38ece5ba6131602534c50342a475ccda73505d8ef749d5838fb13b0eb9ee565c9b27d211e448914468b040cb3ae23aaa5c4100c0066d4d01ff4ec54d5df7ce6acc79d00da439863a81272561e82900d821b40c22d8a0063555d376ac3fed6461c8b9705a93aebff8b0b386c265aeb18cc46e3c40859b85fc04454f38fb5f5916538d1658a3766a83442bbda71572f56a0ba690c4e47038dc500183023af84723672df86fceab08fbbffe7e046561a04aefc8a9033b220fab083e09e5a5c3dd9975531797b8538622ed9c435d2afdf544808f82465fa4590bd217a1e0556d0cfa20b5f02b64b26391df62c83d
+    expiration: 3600
+
+client:
+  enabled: true
+  replicas: 1
+  image: 391898470917.dkr.ecr.ap-southeast-1.amazonaws.com/carental/client:latest
+  port: 3000

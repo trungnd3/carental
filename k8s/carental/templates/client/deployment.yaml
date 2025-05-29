@@ -1,0 +1,35 @@
+{{- if .Values.client.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: client
+  name: client
+spec:
+  replicas: {{ .Values.client.replicas }}
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+        - name: client
+          image: {{ .Values.client.image }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.client.port }}
+          env:
+            - name: WDS_SOCKET_PORT
+              value: "0"
+            - name: API_BASE_URL
+              value: "http://api:{{ .Values.api.port }}"
+            - name: JWT_SECRET
+              value: {{ .Values.api.jwt.secret }}
+            - name: JWT_EXPIRATION
+              value: "{{ .Values.api.jwt.expiration }}"
+            - name: PORT
+              value: "{{ .Values.client.port }}"
+{{- end }}

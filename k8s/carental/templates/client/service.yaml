@@ -1,0 +1,17 @@
+{{- if .Values.client.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: client
+  name: client
+spec:
+  ports:
+  - name: "http"
+    protocol: TCP
+    port: {{ .Values.client.port }}
+    targetPort: {{ .Values.client.port }}
+  selector:
+    app: client
+  type: ClusterIP
+{{- end }}
