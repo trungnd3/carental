@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 jobs:
-  main:
+  build-and-push-docker:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -51,3 +51,19 @@ jobs:
           done
 
           wait
+
+  deploy-to-ec2:
+    runs-on: ubuntu-latest
+    environment:
+      name: "EC2"
+      url: ${{ steps.deploy.outputs.vm_url }}
+    steps:
+    - id: deploy
+      name: Deploy
+      uses: bitovi/github-actions-deploy-docker-to-ec2@v1.0.1
+      with:
+        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws_default_region: ap-southeast-1
+
+        env_aws_secret: prod/Carental/Secret,prod/Carental/PostgresQL
