@@ -34,7 +34,6 @@ jobs:
 
       - name: Build and push all images to ECR
         run: |
-          export AWS_ECR_REGISTRY=${{ secrets.AWS_ECR_REGISTRY }}
           IMAGES=(
             "api api/Dockerfile"
             "client client/Dockerfile"
@@ -67,11 +66,14 @@ jobs:
 
       - name: Deploy on EC2
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          AWS_ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
         with:
           debug: true
           host: ${{ secrets.AWS_EC2_HOST }}
           username: ${{ secrets.AWS_EC2_USER }}
           key: ${{ secrets.AWS_EC2_SSH_KEY }}
+          envs: AWS_ECR_REGISTRY
           script: |
             sudo yum update -y
             sudo yum install -y docker
@@ -80,7 +82,6 @@ jobs:
             sudo chmod +x /usr/local/bin/docker-compose
             cd ~/carental
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_REGISTRY }}
-            export AWS_ECR_REGISTRY=${{ secrets.AWS_ECR_REGISTRY }}
             sudo docker-compose pull
             sudo docker-compose up -d --remove-orphans
             sudo docker system prune -f
