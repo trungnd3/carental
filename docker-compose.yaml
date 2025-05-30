@@ -9,9 +9,6 @@ services:
       - ./db:/docker-entrypoint-initdb.d
       - db_pgdata:/var/lib/postgresql/data
     entrypoint: ["./db/entrypoint.sh"]
-    environment:
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD # Set your own password here
-      POSTGRES_DB: $POSTGRES_DB
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready', '-d', 'db_prod']
       interval: 30s
@@ -47,8 +44,6 @@ services:
     hostname: client
     ports:
       - 3002:3000
-    env_file:
-      - .env
     environment:
       - WDS_SOCKET_PORT=0
       - API_BASE_URL=http://nginx/api
