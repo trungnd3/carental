@@ -3,6 +3,7 @@ services:
     image: postgres
     networks:
       - carental-network
+    hostname: postgres
     ports:
       - 5432:5432
     env_file:
@@ -10,10 +11,9 @@ services:
     volumes:
       - ./db:/docker-entrypoint-initdb.d
       - db_pgdata:/var/lib/postgresql/data
-    entrypoint: ["./db/entrypoint.sh"]
     environment:
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD # Set your own password here
-      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_PASSWORD: carental # Set your own password here
+      POSTGRES_DB: carental
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready', '-d', 'db_prod']
       interval: 30s
@@ -26,6 +26,7 @@ services:
     image: 391898470917.dkr.ecr.ap-southeast-1.amazonaws.com/carental/nginx:latest
     networks:
       - carental-network
+    hostname: nginx
     ports:
       - 3000:80
     depends_on:
@@ -36,8 +37,17 @@ services:
     networks:
       - carental-network
     hostname: api
-    ports:
-      - 3001:3000
+    # ports:
+    #   - 3001:3000
+    entrypoint: ["npm", "run", "start:seed:prod"]
+    volumes:
+      - ./api:/usr/src/app:delegated
+      - api_node_modules:/usr/src/app/node_modules
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://postgres:carental@postgres:5432/carental
+      - PORT=3000
     depends_on:
       postgres:
         condition: service_healthy
@@ -47,8 +57,13 @@ services:
     networks:
       - carental-network
     hostname: client
-    ports:
-      - 3002:3000
+    # ports:
+    #   - 3002:3000
+    entrypoint: ["npm", "run", "start"]
+    volumes:
+      - ./client:/app:delegated
+      - client_node_modules:/usr/src/app/node_modules
+      - client_assets:/usr/src/app/public
     env_file:
       - .env
     environment:
@@ -56,9 +71,13 @@ services:
       - API_BASE_URL=http://nginx/api
       - NEXT_PUBLIC_API_URL=http://nginx/api
       - NEXT_PUBLIC_BASE_URL=http://nginx
+      - PORT=3000
 
 volumes:
   db_pgdata:
+  api_node_modules:
+  client_node_modules:
+  client_assets:
 
 networks:
   carental-network:
