@@ -37,8 +37,12 @@ services:
     networks:
       - carental-network
     hostname: api
-    ports:
-      - 3001:3000
+    # ports:
+    #   - 3001:3000
+    entrypoint: ["npm", "run", "start:seed:prod"]
+    volumes:
+      - ./api:/usr/src/app:delegated
+      - api_node_modules:/usr/src/app/node_modules
     env_file:
       - .env
     environment:
@@ -52,8 +56,13 @@ services:
     networks:
       - carental-network
     hostname: client
-    ports:
-      - 3002:3000
+    # ports:
+    #   - 3002:3000
+    entrypoint: ["npm", "run", "start"]
+    volumes:
+      - ./client:/app:delegated
+      - client_node_modules:/usr/src/app/node_modules
+      - client_assets:/usr/src/app/public
     env_file:
       - .env
     environment:
@@ -64,6 +73,9 @@ services:
 
 volumes:
   db_pgdata:
+  api_node_modules:
+  client_node_modules:
+  client_assets:
 
 networks:
   carental-network:

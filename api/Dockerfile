@@ -43,6 +43,7 @@ COPY ./api/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+EXPOSE 5000
 
 # The command to run the application in production
 CMD ["npm", "run", "start:seed:prod"]
