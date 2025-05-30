@@ -60,7 +60,7 @@ jobs:
           host: ${{ secrets.AWS_EC2_HOST }}
           username: ${{ secrets.AWS_EC2_USER }}
           key: ${{ secrets.AWS_EC2_SSH_KEY }}
-          source: "docker-compose.yaml db"
+          source: "carental/docker-compose.yaml carental/db"
           target: ~/carental
           debug: true
 
