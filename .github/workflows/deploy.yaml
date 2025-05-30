@@ -53,6 +53,7 @@ jobs:
           wait
 
   deploy-to-ec2:
+    needs: build-and-push-docker
     runs-on: ubuntu-latest
     environment:
       name: "EC2"
