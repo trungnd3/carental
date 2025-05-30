@@ -18,7 +18,7 @@ services:
 
   nginx:
     restart: always
-    image: 391898470917.dkr.ecr.ap-southeast-1.amazonaws.com/carental/nginx:latest
+    image: ${AWS_ECR_REGISTRY}/carental/nginx:latest
     networks:
       - carental-network
     ports:
@@ -27,7 +27,7 @@ services:
       - api
       - client
   api:
-    image: 391898470917.dkr.ecr.ap-southeast-1.amazonaws.com/carental/api:latest
+    image: ${AWS_ECR_REGISTRY}/carental/api:latest
     networks:
       - carental-network
     hostname: api
@@ -38,7 +38,7 @@ services:
         condition: service_healthy
         restart: true
   client:
-    image: 391898470917.dkr.ecr.ap-southeast-1.amazonaws.com/carental/client:latest
+    image: ${AWS_ECR_REGISTRY}/carental/client:latest
     networks:
       - carental-network
     hostname: client
