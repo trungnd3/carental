@@ -3,7 +3,6 @@ services:
     image: postgres
     networks:
       - carental-network
-    hostname: postgres
     ports:
       - 5432:5432
     env_file:
@@ -11,9 +10,10 @@ services:
     volumes:
       - ./db:/docker-entrypoint-initdb.d
       - db_pgdata:/var/lib/postgresql/data
+    entrypoint: ["./db/entrypoint.sh"]
     environment:
-      POSTGRES_PASSWORD: carental # Set your own password here
-      POSTGRES_DB: carental
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD # Set your own password here
+      POSTGRES_DB: $POSTGRES_DB
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready', '-d', 'db_prod']
       interval: 30s
@@ -26,7 +26,6 @@ services:
     image: 391898470917.dkr.ecr.ap-southeast-1.amazonaws.com/carental/nginx:latest
     networks:
       - carental-network
-    hostname: nginx
     ports:
       - 3000:80
     depends_on:
@@ -39,10 +38,6 @@ services:
     hostname: api
     ports:
       - 3001:3000
-    env_file:
-      - .env
-    environment:
-      - DATABASE_URL=postgresql://postgres:carental@postgres:5432/carental
     depends_on:
       postgres:
         condition: service_healthy
