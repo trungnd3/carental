@@ -32,8 +32,9 @@ COPY --from=development /usr/src/app/.next ./.next
 COPY ./client/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 EXPOSE 3000
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # The command to run the application in production
 CMD [ "npm", "run", "start" ]
