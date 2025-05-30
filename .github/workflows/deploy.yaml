@@ -34,6 +34,7 @@ jobs:
 
       - name: Build and push all images to ECR
         run: |
+          export AWS_ECR_REGISTRY=${{ secrets.AWS_ECR_REGISTRY }}
           IMAGES=(
             "api api/Dockerfile"
             "client client/Dockerfile"
@@ -53,11 +54,7 @@ jobs:
           done
 
           wait
-      - name: List files for debugging
-        run: |
-          pwd
-          ls -al
-          ls -al db || echo "db directory does not exist"
+
       - name: Copy docker-compose and db files to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -70,9 +67,6 @@ jobs:
 
       - name: Deploy on EC2
         uses: appleboy/ssh-action@v1.0.3
-        env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
         with:
           debug: true
           host: ${{ secrets.AWS_EC2_HOST }}
@@ -85,7 +79,8 @@ jobs:
             sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
             cd ~/carental
-            aws ecr get-login-password --region ${{ AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ AWS_ECR_REGISTRY }}
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_REGISTRY }}
+            export AWS_ECR_REGISTRY=${{ secrets.AWS_ECR_REGISTRY }}
             sudo docker-compose pull
             sudo docker-compose up -d --remove-orphans
             sudo docker system prune -f
